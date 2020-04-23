@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<title>用户注册</title>
+	<link rel="stylesheet" type="text/css" href="css/verifyCode.css"/>
+	<link rel="stylesheet" type="text/css" href="css/button.css"/>
+	<script src="js/verifyCode.js"></script>
+	<script>
+		function regist_check(){
+			var usname = document.getElementById("username").value;
+			var passwd = document.getElementById("password").value;
+			var repeat_pass = document.getElementById("password2").value;
+			
+			if (usname.length <= 0) {
+				alert("用户名不能为空！"); createCode(4); return false;
+			}
+			if (passwd.length <= 0 || repeat_pass.length <= 0) {
+				alert("密码不能为空！"); createCode(4); return false;
+			}
+			if (passwd != repeat_pass) {
+				alert("两次输入的密码不一致！"); createCode(4); return false;
+			}
+			
+			if (!validateCode()) {
+				createCode(4);
+				return false;
+			}
+			
+			var forbiddenArray =['\'','<','>','#','\'','\''];
+			var re = '';
+			for(var i=0;i<forbiddenArray.length;i++){
+				if(i==forbiddenArray.length-1) re+=forbiddenArray[i];
+				else re += forbiddenArray[i]+"|";
+			}
+			var pattern = new RegExp(re,"g");
+			if(pattern.test(usname)){
+				alert("用户名包含非法字符！");
+				createCode(4);
+				return false;
+			}
+			if (pattern.text(passwd)) {
+				alert("密码包含非法字符！");
+				createCode(4);
+				return false;
+			}
+			
+			return true;
+		}
+	</script>
+</head>
+<body>
+
+<h2>用户注册</h2>
+	<form method="post" action="regist.jsp" name="myform" onsubmit="return regist_check()" >	
+		<div>
+			<label for="username">用户名：</label> 
+			<input type="text" id="username" name="username" placeholder="请输入用户名" value="" />
+        </div>
+        <div>
+			<label for="password">&ensp; 密码：</label>
+			<input type="password" id="password" name="password" placeholder="请输入密码" value="" />
+		</div>
+		<div>
+			<label for="password2">重复密码：</label>
+			<input type="password" id="password2" name="password2" placeholder="请输入密码" value="" />
+		</div>
+		<div>
+			<label for="idtype">我是：</label>
+			<select id="identity" name="identity">
+  				<option value="seller">卖家</option>
+  				<option value="customer">顾客</option>
+			</select>
+		</div>
+		<div>
+			<div id="checkCode" class="code"  onclick="createCode(4)"  ></div>
+			<div> <br> <br> <h4> <span onclick="createCode(4)"> 看不清换一张 </span> </h4> </div>
+		</div>
+		
+		<div>
+			<label> 验证码：</label>
+			<input type="text" id="inputCode" value="" />
+		</div>
+		<div >
+			<input type="submit" value="注册">        
+		</div>
+	</form>
+
+</body>
+</html>
